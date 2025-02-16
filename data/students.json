@@ -1,0 +1,32 @@
+{
+    "students": {
+      "student1": {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "id": "12345",
+        "school": "ABC School",
+        "grade": "10",
+        "password": "password123",
+        "events": ["event1", "event3"]
+      },
+      "student2": {
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "id": "67890",
+        "school": "XYZ School",
+        "grade": "12",
+        "password": "password456",
+        "events": ["event2", "event4", "event5"]
+      },
+      "student3": {
+        "name": "Alice Johnson",
+        "email": "alice.johnson@example.com",
+        "id": "23456",
+        "school": "ABC School",
+        "grade": "10",
+        "password": "password789",
+        "events": ["event1", "event4"]
+      }
+    }
+  }
+  

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="adminscripts.js"> </script>
+
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-2xl font-semibold mb-4">Admin Dashboard</h2>
+
+        
+
+        <div class="mb-6">
+            <label for="school-filter" class="mr-2">School:</label>
+            <select id="school-filter" class="p-2 border rounded bg-gray-800 text-white" onchange="filterData()">
+                <option value="">All Schools</option>
+                <option value="ABC School">ABC School</option>
+                <option value="XYZ School">XYZ School</option>
+            </select>
+
+            <label for="grade-filter" class="ml-4 mr-2">Grade:</label>
+            <select id="grade-filter" class="p-2 border rounded bg-gray-800 text-white" onchange="filterData()">
+                <option value="">All Grades</option>
+                <option value="10">Grade 10</option>
+                <option value="12">Grade 12</option>
+            </select>
+
+            <label for="event-filter" class="ml-4 mr-2">Event:</label>
+            <select id="event-filter" class="p-2 border rounded bg-gray-800 text-white" onchange="filterData()">
+                <option value="">All Events</option>
+                <option value="event1">Event 1</option>
+                <option value="event2">Event 2</option>
+                <option value="event3">Event 3</option>
+                <option value="event4">Event 4</option>
+                <option value="event5">Event 5</option>
+            </select>
+
+            <!-- Reset Filters Button -->
+            <button onclick="resetFilters()" class="ml-4 px-4 py-2 bg-red-600 text-white rounded">Reset Filters</button>
+            <a href="email.html" ;" class="ml-4 px-4 py-2 bg-green-600 text-white rounded inline-block">Send Gmail</a>
+
+        </div>
+
+        <table class="min-w-full bg-gray-800 rounded-lg shadow-md">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">Name</th>
+                    <th class="px-4 py-2 text-left">Email</th>
+                    <th class="px-4 py-2 text-left">ID</th>
+                    <th class="px-4 py-2 text-left">School</th>
+                    <th class="px-4 py-2 text-left">Grade</th>
+                    <th class="px-4 py-2 text-left">Events</th>
+                </tr>
+            </thead>
+            <tbody id="student-table-body">
+                <!-- Student data rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <div id="pagination" class="mt-4 flex justify-center">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
+        <div class="max-w-7xl mx-auto">
+123456789    
+            <div class="grid grid-cols-2 gap-6 mt-8">
+                <!-- Left side form -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold mb-4">Enter Student Details</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="name" class="block mb-2">Name:</label>
+                            <input type="text" id="name" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter name">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="email" class="block mb-2">Email:</label>
+                            <input type="email" id="email" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter email">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="id" class="block mb-2">ID:</label>
+                            <input type="text" id="id" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter student ID">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="school" class="block mb-2">School:</label>
+                            <input type="text" id="school" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter school">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="grade" class="block mb-2">Grade:</label>
+                            <input type="text" id="grade" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter grade">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="password" class="block mb-2">Password:</label>
+                            <input type="password" id="password" class="w-full max-w-xs p-4 border rounded bg-gray-800 text-white mb-4" placeholder="Enter password">
+                        </div>
+    
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="events" class="block mb-2">Events:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event1" value="event1" class="mr-2"> Event 1
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event2" value="event2" class="mr-2"> Event 2
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event3" value="event3" class="mr-2"> Event 3
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event4" value="event4" class="mr-2"> Event 4
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event5" value="event5" class="mr-2"> Event 5
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="event6" value="event6" class="mr-2"> Event 6
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <button onclick="convertToJson()" class="px-4 py-2 bg-blue-600 text-white rounded mt-4">Convert to JSON</button>
+                </div>
+    
+                <!-- Right side JSON output -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold mb-4">JSON Output</h3>
+                    <pre id="json-output" class="p-4 border rounded bg-gray-800 text-white h-full whitespace-pre-wrap"></pre>
+                    <button onclick="copyToClipboard()" class="px-4 py-2 bg-green-600 text-white rounded mt-4">Copy JSON</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

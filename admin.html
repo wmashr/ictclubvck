@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Student List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
+</head>
+<body class="bg-gray-800 text-white dark:bg-gray-900 dark:text-gray-100">
+
+  <!-- Top Navigation -->
+  <header class="w-full p-4 bg-gray-700 dark:bg-gray-800 flex justify-between items-center">
+    <span class="text-xl font-semibold">Admin Dashboard</span>
+    <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+      Logout
+    </button>
+  </header>
+
+  <!-- Main Content -->
+  <div class="p-8">
+    <h1 class="text-3xl font-bold mb-8">Student Data</h1>
+
+    <!-- Add New Student Button -->
+    <button id="add-new-student-button" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mb-4 transition duration-300 ease-in-out">
+      Add New Student
+    </button>
+
+    
+
+      <!-- Add New Student Modal -->
+  <div id="add-student-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex justify-center items-center">
+    <div class="bg-gray-700 p-6 rounded-lg max-w-md w-full">
+      <h2 class="text-xl font-bold mb-4">Add New Student</h2>
+      <form id="add-student-form">
+        <div class="mb-4">
+          <label class="block mb-2" for="new-name">Name</label>
+          <input type="text" id="new-name" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="new-email">Email</label>
+          <input type="email" id="new-email" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="new-school">School</label>
+          <input type="text" id="new-school" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="new-grade">Grade</label>
+          <input type="text" id="new-grade" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="new-id">ID</label>
+          <input type="text" id="new-id" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="new-password">Password</label>
+          <input type="password" id="new-password" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event1" value="event1" class="form-checkbox">
+              <span class="ml-2">Quiz Competition</span>
+            </label>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event2" value="event2" class="form-checkbox">
+              <span class="ml-2">Video Editing</span>
+            </label>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event3" value="event3" class="form-checkbox">
+              <span class="ml-2">Animation Competition</span>
+            </label>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event4" value="event4" class="form-checkbox">
+              <span class="ml-2">Web Designing</span>
+            </label>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event5" value="event5" class="form-checkbox">
+              <span class="ml-2">Digital Art</span>
+            </label>
+            <label class="inline-flex items-center mr-4">
+              <input type="checkbox" id="event6" value="event6" class="form-checkbox">
+              <span class="ml-2">Photo Manipulation</span>
+            </label>
+          </div>
+          
+          
+        <div class="flex justify-between mt-8">
+          <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg" onclick="closeAddModal()">Cancel</button>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <!-- Table for Student Data -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full bg-gray-700 text-left rounded-lg">
+        <thead class="bg-gray-800">
+          <tr>
+            <th class="p-4">Name</th>
+            <th class="p-4">Email</th>
+            <th class="p-4">School</th>
+            <th class="p-4">Grade</th>
+            <th class="p-4">ID</th>
+            <th class="p-4">Events</th>
+            <th class="p-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="student-table-body">
+          <!-- Dynamic student data will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="flex justify-between items-center mt-4">
+      <button id="prev-page" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+        Previous
+      </button>
+      <span id="page-info" class="text-lg"></span>
+      <button id="next-page" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Edit Student Modal -->
+  <div id="edit-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex justify-center items-center">
+    <div class="bg-gray-700 p-6 rounded-lg max-w-md w-full">
+      <h2 class="text-xl font-bold mb-4">Edit Student</h2>
+      <form id="edit-form">
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-name">Name</label>
+          <input type="text" id="edit-name" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-email">Email</label>
+          <input type="email" id="edit-email" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-school">School</label>
+          <input type="text" id="edit-school" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-grade">Grade</label>
+          <input type="text" id="edit-grade" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-id">ID</label>
+          <input type="text" id="edit-id" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2" for="edit-password">Password</label>
+          <input type="password" id="edit-password" class="w-full p-2 bg-gray-600 rounded-lg" required>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-2" for="edit-events">Events</label>
+            <div>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event1" value="event1" class="form-checkbox">
+                <span class="ml-2">Quiz Competition</span>
+              </label>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event2" value="event2" class="form-checkbox">
+                <span class="ml-2">Video Editing</span>
+              </label>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event3" value="event3" class="form-checkbox">
+                <span class="ml-2">Animation Competition</span>
+              </label>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event4" value="event4" class="form-checkbox">
+                <span class="ml-2">Web Designing</span>
+              </label>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event5" value="event5" class="form-checkbox">
+                <span class="ml-2">Digital Art</span>
+              </label>
+              <label class="inline-flex items-center mr-4">
+                <input type="checkbox" id="event6" value="event6" class="form-checkbox">
+                <span class="ml-2">Photo Manipulation</span>
+              </label>
+            </div>
+          </div>
+          
+        <div class="flex justify-between">
+          <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase Config and Logic -->
+  <script src="admin.js">
+    // Initialize Firebase
+    
+  </script>
+  <script src="mouse.js"></script> 
+
+
+</body>
+</html>

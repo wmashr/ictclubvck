@@ -1,0 +1,42 @@
+html {
+  scroll-behavior: smooth;
+}
+/* Hide scrollbar */
+      .carousel::-webkit-scrollbar {
+        display: none;
+      }
+      .carousel {
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        scrollbar-width: none; /* Firefox */
+      }
+      @font-face {
+  font-family: 'Mexon';
+  src: url('/assets/Mexon.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Apply the font to the specific element */
+h1 {
+  font-family: 'Mexon', sans-serif;
+}
+        
+.neon {
+  text-shadow: 0 0 5px #007BFF, 0 0 10px #007BFF, 0 0 2px #140083;
+}
+.neon-button {
+  border: 1px solid #ffffff;
+  box-shadow: 0 0 5px #a1b3c7, 0 0 4px #a1b3c7;
+}
+.neon-button:hover {
+  box-shadow: 0 0 20px #001bb3, 0 0 40px #001bb3;
+  border-color: #001bb3;
+}
+.event-card {
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent overlay on card */
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(223, 223, 223, 0.5); /* Updated to match the blue neon */
+}
+

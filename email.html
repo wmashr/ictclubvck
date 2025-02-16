@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Student Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        let adminPassword = '';  // Variable to hold the admin password
+
+        // Fetch admin password from data/admin.json
+        async function fetchAdminPassword() {
+            try {
+                const response = await fetch('data/admin.json');
+                const data = await response.json();
+                adminPassword = data.password;
+                console.log('Admin password fetched:', adminPassword);  // Debugging fetched password
+            } catch (error) {
+                console.error("Error fetching admin password:", error);
+            }
+        }
+
+        // Prompt the user to enter the password and authenticate
+        function authenticateAdmin() {
+            const enteredPassword = prompt("Enter admin password:");
+
+            if (enteredPassword === adminPassword) {
+                loadStudentData();  // Proceed to load data if password is correct
+            } else {
+                alert("Incorrect password. Access denied.");
+            }
+        }
+
+        // Fetch student data from the JSON file
+        async function loadStudentData() {
+            const response = await fetch('data/students.json');
+            const students = await response.json();
+
+            // Populate the dropdown with student names
+            const studentSelect = document.getElementById('student-select');
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.email;
+                option.textContent = `${student.name} - ${student.id}`;
+                studentSelect.appendChild(option);
+            });
+
+            // Store the students' data in localStorage for easy access in sendEmail
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // Function to generate Gmail link with email template
+        function sendEmail() {
+            const studentSelect = document.getElementById('student-select');
+            const selectedEmail = studentSelect.value;
+            const selectedName = studentSelect.options[studentSelect.selectedIndex].text;
+
+            // Check if a student is selected
+            if (!selectedEmail) {
+                alert('Please select a student.');
+                return;
+            }
+
+            // Get selected student data
+            const students = JSON.parse(localStorage.getItem('students'));
+            const student = students.find(s => s.email === selectedEmail);
+
+            if (!student) {
+                alert('Student data not found.');
+                return;
+            }
+
+            // Create the email content with a template
+            const subject = encodeURIComponent('Student Data');
+            const body = encodeURIComponent(`Hello,
+
+I hope this message finds you well. Below is the information for ${selectedName}:
+
+Name: ${student.name}
+Email: ${student.email}
+ID: ${student.id}
+School: ${student.school}
+Grade: ${student.grade}
+Events: ${student.events.join(', ')}
+
+Regards,
+Admin`);
+
+            // Create the Gmail link directly in the browser
+            const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${selectedEmail}&su=${subject}&body=${body}`;
+
+            // Open Gmail in the browser with the email template
+            window.open(mailtoLink, '_blank');
+        }
+
+        // Call the function to fetch the admin password and authenticate when the page is loaded
+        window.onload = async () => {
+            await fetchAdminPassword();  // Fetch the password first
+            authenticateAdmin();  // Then ask for password
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-2xl font-semibold mb-6">Send Student Data</h1>
+
+        <div class="space-y-4">
+            <label for="student-select" class="block">Select Student:</label>
+            <select id="student-select" class="w-full p-3 border rounded bg-gray-800 text-white">
+                <option value="">--Select a student--</option>
+            </select>
+        </div>
+
+        <button onclick="sendEmail()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">Send Email</button>
+    </div>
+</body>
+</html>

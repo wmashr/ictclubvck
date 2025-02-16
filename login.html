@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind CSS CDN -->
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNALgHhVIUBJGzcMUFNMlwBOpuNdkWQJk",
+      authDomain: "ictvck-f5b4d.firebaseapp.com",
+      projectId: "ictvck-f5b4d",
+      storageBucket: "ictvck-f5b4d.firebasestorage.app",
+      messagingSenderId: "237518282571",
+      appId: "1:237518282571:web:2fc9afaf0520d328f652ce",
+      measurementId: "G-GS6PKG4BKJ"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Function to fetch student data from Firebase Realtime Database
+    async function fetchStudentData() {
+      try {
+        const dbRef = ref(database);
+        const snapshot = await get(child(dbRef, 'students'));
+        if (snapshot.exists()) {
+          return snapshot.val();
+        } else {
+          console.log('No student data available');
+          return {};
+        }
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+        return {};
+      }
+    }
+
+    // Login form submission handler
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const studentId = document.getElementById('student-id').value;
+      const password = document.getElementById('password').value;
+
+      // Fetch student data from Firebase
+      const studentData = await fetchStudentData();
+
+      // Check if the student ID and password match any student in the database
+      let studentFound = false;
+      for (let studentKey in studentData) {
+        const student = studentData[studentKey];
+        if (student.id === studentId && student.password === password) {
+          studentFound = true;
+          // Store student data in localStorage
+          localStorage.setItem('student', JSON.stringify(student));
+          // Redirect to the dashboard
+          window.location.href = "dashboard.html";
+          break;
+        }
+      }
+
+      if (!studentFound) {
+        document.getElementById('error-message').classList.remove('hidden');
+      }
+    });
+  </script>
+
+  <style>
+    /* Style for the background video */
+    .bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="text-white flex items-center justify-center h-screen dark:text-gray-100">
+
+  <!-- Background Video -->
+  <video class="bg-video" autoplay muted loop>
+    <source src="assets/bgloop/loopbg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Login Form Container -->
+  <div class="p-8 rounded-lg shadow-lg max-w-sm w-full">
+    <h2 class="text-2xl font-bold text-center mb-6">Student Login</h2>
+
+    <!-- Login Form -->
+    <form id="login-form" action="#" method="POST">
+      <!-- Student ID Input -->
+      <div class="mb-4">
+        <label for="student-id" class="block text-gray-300 font-medium">Student ID</label>
+        <input type="text" id="student-id" name="student-id" class="w-full p-3 border border-gray-600 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:focus:ring-blue-400" placeholder="Enter your student ID" required>
+      </div>
+
+      <!-- Password Input -->
+      <div class="mb-6">
+        <label for="password" class="block text-gray-300 font-medium">Password</label>
+        <input type="password" id="password" name="password" class="w-full p-3 border border-gray-600 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-500 dark:focus:ring-blue-400" placeholder="Enter your password" required>
+      </div>
+
+      <!-- Error Message -->
+      <p id="error-message" class="text-red-500 text-sm text-center hidden">Invalid student ID or password.</p>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">Login</button>
+    </form>
+  </div>
+
+</body>
+</html>

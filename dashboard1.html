@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-800 text-white dark:bg-gray-900 dark:text-gray-100">
+
+  <!-- Top Navigation -->
+  <header class="w-full p-4 bg-gray-700 dark:bg-gray-800 flex justify-between items-center">
+    <span class="text-xl font-semibold" id="welcome-message">Welcome, Student!</span>
+
+    <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+      Logout
+    </button>
+  </header>
+
+  <!-- Main Content Wrapper with Grid Layout -->
+  <div class=" top-0 left-0 right-0 bottom-0 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 p-8 gap-6">
+
+    <!-- Student Details Section -->
+    <div id="student-details" class="bg-gray-700 dark:bg-gray-800 p-8 rounded-lg shadow-lg col-span-1">
+      <h3 class="text-xl font-semibold mb-4">Student Details</h3>
+      <div class="space-y-4">
+        <div class="flex justify-between">
+          <p class="font-medium">Name:</p>
+          <span id="student-name" class="text-blue-400"></span>
+        </div>
+        <div class="flex justify-between">
+          <p class="font-medium">Email:</p>
+          <span id="student-email" class="text-blue-400"></span>
+        </div>
+        <div class="flex justify-between">
+          <p class="font-medium">School:</p>
+          <span id="student-school" class="text-blue-400"></span>
+        </div>
+        <div class="flex justify-between">
+          <p class="font-medium">Grade:</p>
+          <span id="student-grade" class="text-blue-400"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submission Instructions Section -->
+    <div id="submission-instructions" class="bg-gray-700 dark:bg-gray-800 p-8 rounded-lg shadow-lg col-span-1">
+      <h3 class="text-xl font-semibold">Submission Instructions</h3>
+      <p class="text-gray-200 mt-2">Make sure to submit your work before the deadline. Click on the 'Submit' button for each event to complete your submission.</p>
+    </div>
+
+    <!-- Deadline Countdown Section -->
+    <div id="deadline-countdown" class="bg-gray-700 dark:bg-gray-800 p-8 rounded-lg shadow-lg col-span-1">
+      <h3 class="text-xl font-semibold">Deadline Countdown</h3>
+      <div id="countdown-timer" class="text-3xl font-bold text-blue-300">
+        <!-- Countdown timer will be displayed here -->
+      </div>
+    </div>
+
+    <!-- Event Cards Section -->
+    <div id="event-cards" class="bg-gray-700 dark:bg-gray-800 p-8 rounded-lg shadow-lg col-span-1 lg:col-span-2 xl:col-span-2">
+      <h3 class="text-xl font-semibold">Registered Events</h3>
+      <div id="events-container" class="mt-4 space-y-4">
+        <!-- Event Cards will be displayed here -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript to fetch and display student data -->
+  <script>
+    // Fetch student data from localStorage
+    const student = JSON.parse(localStorage.getItem('student'));
+
+    if (student) {
+      // Display student details
+      document.getElementById('student-name').textContent = student.name;
+      document.getElementById('student-email').textContent = student.email;
+      document.getElementById('student-school').textContent = student.school;
+      document.getElementById('student-grade').textContent = student.grade;
+      document.getElementById('welcome-message').textContent = `Welcome, ${student.name}!`;
+
+      // Display registered events
+      const eventsContainer = document.getElementById('events-container');
+
+      // List of all available events
+      const allEvents = {
+        event1: { name: "Quiz Competition", description: "Test your knowledge in various subjects.", url: "https://quizcompetition.com" },
+        event2: { name: "Video Editing", description: "Showcase your video editing skills.", url: "https://videoediting.com" },
+        event3: { name: "Animation Competition", description: "Create amazing animations and win prizes.", url: "https://animationcompetition.com" },
+        event4: { name: "Web Designing", description: "Design stunning websites and become a pro.", url: "https://webdesigning.com" },
+        event5: { name: "Digital Art", description: "Express creativity digitally, pixel brush strokes, modern masterpiece.", url: "https://digitalart.com" },
+        event6: { name: "Photo Manipulation", description: "Manipulate photos and create artistic masterpieces.", url: "https://photomanipulation.com" }
+      };
+
+      // Check if the student has registered for any event and display the corresponding cards
+      student.events.forEach(eventId => {
+        const event = allEvents[eventId];
+        if (event) {
+          const eventCard = document.createElement('div');
+          eventCard.classList.add('bg-gray-600', 'p-4', 'rounded-lg', 'shadow-md', 'transition', 'duration-300', 'hover:bg-gray-500');
+          eventCard.innerHTML = ` 
+            <h4 class="text-xl font-semibold text-blue-300">${event.name}</h4>
+            <p class="text-gray-200 mt-2">${event.description}</p>
+            <a href="${event.url}" target="_blank">
+              <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">Submit</button>
+            </a>
+          `;
+          eventsContainer.appendChild(eventCard);
+        }
+      });
+
+      // Countdown timer functionality
+      const deadlineDate = new Date('2025-01-15T00:00:00'); // Example deadline date
+      const countdownTimer = document.getElementById('countdown-timer');
+
+      function updateCountdown() {
+        const now = new Date();
+        const timeLeft = deadlineDate - now;
+
+        if (timeLeft <= 0) {
+          countdownTimer.textContent = "Deadline has passed!";
+        } else {
+          const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+          countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+      }
+
+      // Update countdown every second
+      setInterval(updateCountdown, 1000);
+      updateCountdown(); // Initial call to set the countdown immediately
+
+      // Logout functionality
+      document.getElementById('logout-button').addEventListener('click', function() {
+        localStorage.removeItem('student'); // Remove student data from localStorage
+        window.location.href = "index.html"; // Redirect to login page
+      });
+
+    } else {
+      // If no student data found, redirect to the login page
+      window.location.href = "login.html";
+    }
+
+    // Auto redirect to login page on page refresh if no student data
+    window.addEventListener('beforeunload', function() {
+      if (!student) {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+</body>
+</html>
