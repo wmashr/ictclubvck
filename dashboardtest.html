@@ -35,7 +35,6 @@
                 document.getElementById('welcome-message').textContent = `Welcome, ${student.name}!`;
             } else {
                 console.log("No such student found!");
-                window.location.href = "login.html";
             }
         }
 
@@ -85,7 +84,6 @@
                 getEvents();
                 getDeadline();
             } else {
-                window.location.href = "login.html";
             }
         });
     </script>
@@ -107,7 +105,6 @@
     <script>
         function logout() {
             localStorage.removeItem("userEmail");
-            window.location.href = "login.html";
         }
     </script>
 </body>
