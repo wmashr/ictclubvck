@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <script type="module">
+        // Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function getStudentData(email) {
+            const studentRef = doc(db, "students", email);
+            const studentSnap = await getDoc(studentRef);
+            if (studentSnap.exists()) {
+                const student = studentSnap.data();
+                document.getElementById('student-name').textContent = student.name;
+                document.getElementById('student-email').textContent = student.email;
+                document.getElementById('student-school').textContent = student.school;
+                document.getElementById('student-grade').textContent = student.grade;
+                document.getElementById('welcome-message').textContent = `Welcome, ${student.name}!`;
+            } else {
+                console.log("No such student found!");
+                window.location.href = "login.html";
+            }
+        }
+
+        async function getEvents() {
+            const querySnapshot = await getDocs(collection(db, "events"));
+            const eventsContainer = document.getElementById('events-container');
+            querySnapshot.forEach((doc) => {
+                const event = doc.data();
+                const eventCard = document.createElement('div');
+                eventCard.innerHTML = ` 
+                    <h4>${event.name}</h4>
+                    <p>${event.description}</p>
+                    <a href="${event.url}" target="_blank"><button>Submit</button></a>
+                `;
+                eventsContainer.appendChild(eventCard);
+            });
+        }
+
+        async function getDeadline() {
+            const docRef = doc(db, "settings", "deadline");
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const deadlineDate = new Date(docSnap.data().date);
+                startCountdown(deadlineDate);
+            } else {
+                console.log("No deadline found!");
+            }
+        }
+
+        function startCountdown(deadline) {
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = deadline - now;
+                if (distance < 0) {
+                    document.getElementById('countdown').textContent = "Deadline Passed";
+                    return;
+                }
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                document.getElementById('countdown').textContent = `${days} days remaining`;
+            }, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const userEmail = localStorage.getItem("userEmail");
+            if (userEmail) {
+                getStudentData(userEmail);
+                getEvents();
+                getDeadline();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1 id="welcome-message">Welcome!</h1>
+    <p><strong>Name:</strong> <span id="student-name"></span></p>
+    <p><strong>Email:</strong> <span id="student-email"></span></p>
+    <p><strong>School:</strong> <span id="student-school"></span></p>
+    <p><strong>Grade:</strong> <span id="student-grade"></span></p>
+    
+    <h2>Upcoming Events</h2>
+    <div id="events-container"></div>
+    
+    <h2>Deadline Countdown</h2>
+    <p id="countdown"></p>
+    
+    <button id="logout-button" onclick="logout()">Logout</button>
+    <script>
+        function logout() {
+            localStorage.removeItem("userEmail");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
