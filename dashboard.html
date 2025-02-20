@@ -114,24 +114,24 @@
 const submissionStartDate = new Date('2025-03-10T00:00:00'); // Submission opens on March 10, 2025
 const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
 const countdownTimer = document.getElementById('countdown-timer');
-const countdownHeading = document.getElementById('countdown-heading');
+const countdownHeading = document.querySelector('#deadline-countdown h3'); // Selecting the heading
 
 function updateCountdown() {
   const now = new Date();
-  let timeLeft, message, headingText;
+  let timeLeft, message;
 
   if (now < submissionStartDate) {
     timeLeft = submissionStartDate - now;
     message = "Submission not opened yet";
-    headingText = "Submission Window Opens In";
+    countdownHeading.textContent = "Submission Window Opens In"; // Update heading
   } else if (now >= submissionStartDate && now < submissionEndDate) {
     timeLeft = submissionEndDate - now;
     message = "Submission Open";
-    headingText = "Deadline Countdown";
+    countdownHeading.textContent = "Deadline Countdown"; // Update heading
   } else {
     timeLeft = 0;
     message = "Deadline has passed!";
-    headingText = "Submission Closed";
+    countdownHeading.textContent = "Submission Closed"; // Update heading
   }
 
   if (timeLeft <= 0) {
@@ -143,9 +143,6 @@ function updateCountdown() {
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
     countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
   }
-
-  // Update heading
-  countdownHeading.textContent = headingText;
 
   // Handle button states
   document.querySelectorAll("#events-container button").forEach(button => {
@@ -173,6 +170,8 @@ function updateCountdown() {
 // Update countdown every second
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initial call to set the countdown immediately
+
+f
 
 
       // Logout functionality
