@@ -110,9 +110,8 @@
         }
       });
 
-    // The CLOCK UPDATE
-      // Submission period configuration
-const submissionStartDate = new Date('2025-01-10T00:00:00'); // Submission opens on March 10, 2025
+    // Submission period configuration
+const submissionStartDate = new Date('2025-03-10T00:00:00'); // Submission opens on March 10, 2025
 const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
 const countdownTimer = document.getElementById('countdown-timer');
 
@@ -131,35 +130,37 @@ function updateCountdown() {
     message = "Deadline has passed!";
   }
 
-  if (timeLeft <= 0) {
-    countdownTimer.textContent = message;
-  } else {
+  if (timeLeft > 0) {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
     countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  } else {
+    countdownTimer.textContent = message;
   }
 
   // Handle button states
-  document.querySelectorAll("#events-container button").forEach(button => {
+  document.querySelectorAll("#events-container a").forEach(link => {
+    const button = link.querySelector("button");
     if (now < submissionStartDate) {
       button.disabled = true;
       button.classList.add("bg-gray-500", "cursor-not-allowed");
       button.classList.remove("bg-blue-500", "hover:bg-blue-600");
       button.textContent = "Submission not opened yet";
-      button.parentElement.removeAttribute("href");
+      link.removeAttribute("href");
     } else if (now >= submissionStartDate && now < submissionEndDate) {
       button.disabled = false;
       button.classList.add("bg-blue-500", "hover:bg-blue-600");
       button.classList.remove("bg-gray-500", "cursor-not-allowed");
       button.textContent = "Submit";
+      link.setAttribute("href", "submission_page_url");
     } else {
       button.disabled = true;
       button.classList.add("bg-gray-500", "cursor-not-allowed");
       button.classList.remove("bg-blue-500", "hover:bg-blue-600");
       button.textContent = "Submission Closed";
-      button.parentElement.removeAttribute("href");
+      link.removeAttribute("href");
     }
   });
 }
@@ -167,9 +168,6 @@ function updateCountdown() {
 // Update countdown every second
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initial call to set the countdown immediately
-
-
-
 
       // Logout functionality
       document.getElementById('logout-button').addEventListener('click', function() {
