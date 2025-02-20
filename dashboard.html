@@ -130,11 +130,15 @@ function updateCountdown() {
 
   // Disable submit buttons if the deadline has passed
   if (timeLeft <= 0) {
-    document.querySelectorAll("#events-container button").forEach(button => {
-      button.disabled = true;
-      button.classList.add("bg-gray-500", "cursor-not-allowed");
-      button.classList.remove("bg-blue-500", "hover:bg-blue-600");
-      button.textContent = "Submission Closed";
+    document.querySelectorAll("#events-container a").forEach(link => {
+      const button = link.querySelector("button");
+      if (button) {
+        button.disabled = true;
+        button.classList.add("bg-gray-500", "cursor-not-allowed");
+        button.classList.remove("bg-blue-500", "hover:bg-blue-600");
+        button.textContent = "Submission Closed";
+        link.removeAttribute("href"); // Remove the link
+      }
     });
   }
 }
@@ -142,6 +146,7 @@ function updateCountdown() {
 // Update countdown every second
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initial call to set the countdown immediately
+
 
 
       // Logout functionality
