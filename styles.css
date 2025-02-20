@@ -40,3 +40,20 @@ h1 {
   box-shadow: 0 0 10px rgba(223, 223, 223, 0.5); /* Updated to match the blue neon */
 }
 
+@font-face {
+  font-family: 'AvantGarde';
+  src: url('assets/AVGARDN_2.TTF') format('truetype');
+}
+
+.avant-garde {
+  font-family: 'AvantGarde', sans-serif;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('assets/orbitron-light.otf') format('truetype');
+}
+
+.orbitron{
+  font-family: 'Orbitron', sans-serif;
+}
