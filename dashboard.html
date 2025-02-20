@@ -51,7 +51,7 @@
 
     <!-- Deadline Countdown Section -->
     <div id="deadline-countdown" class="bg-gray-700 dark:bg-gray-800 p-8 rounded-lg shadow-lg col-span-1">
-      <h3 class="text-xl font-semibold">Deadline Countdown</h3>
+      <h3 class="text-xl font-semibold"></h3>
       <div id="countdown-timer" class="text-3xl font-bold text-blue-300">
         <!-- Countdown timer will be displayed here -->
       </div>
@@ -114,53 +114,58 @@
 const submissionStartDate = new Date('2025-03-10T00:00:00'); // Submission opens on March 10, 2025
 const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
 const countdownTimer = document.getElementById('countdown-timer');
+const countdownHeading = document.getElementById('countdown-heading');
 
 function updateCountdown() {
   const now = new Date();
-  let timeLeft, message;
+  let timeLeft, message, headingText;
 
   if (now < submissionStartDate) {
     timeLeft = submissionStartDate - now;
     message = "Submission not opened yet";
+    headingText = "Submission Window Opens In";
   } else if (now >= submissionStartDate && now < submissionEndDate) {
     timeLeft = submissionEndDate - now;
     message = "Submission Open";
+    headingText = "Deadline Countdown";
   } else {
     timeLeft = 0;
     message = "Deadline has passed!";
+    headingText = "Submission Closed";
   }
 
-  if (timeLeft > 0) {
+  if (timeLeft <= 0) {
+    countdownTimer.textContent = message;
+  } else {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
     countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  } else {
-    countdownTimer.textContent = message;
   }
 
+  // Update heading
+  countdownHeading.textContent = headingText;
+
   // Handle button states
-  document.querySelectorAll("#events-container a").forEach(link => {
-    const button = link.querySelector("button");
+  document.querySelectorAll("#events-container button").forEach(button => {
     if (now < submissionStartDate) {
       button.disabled = true;
       button.classList.add("bg-gray-500", "cursor-not-allowed");
       button.classList.remove("bg-blue-500", "hover:bg-blue-600");
       button.textContent = "Submission not opened yet";
-      link.removeAttribute("href");
+      button.parentElement.removeAttribute("href");
     } else if (now >= submissionStartDate && now < submissionEndDate) {
       button.disabled = false;
       button.classList.add("bg-blue-500", "hover:bg-blue-600");
       button.classList.remove("bg-gray-500", "cursor-not-allowed");
       button.textContent = "Submit";
-      link.setAttribute("href", "submission_page_url");
     } else {
       button.disabled = true;
       button.classList.add("bg-gray-500", "cursor-not-allowed");
       button.classList.remove("bg-blue-500", "hover:bg-blue-600");
       button.textContent = "Submission Closed";
-      link.removeAttribute("href");
+      button.parentElement.removeAttribute("href");
     }
   });
 }
@@ -168,6 +173,7 @@ function updateCountdown() {
 // Update countdown every second
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initial call to set the countdown immediately
+
 
       // Logout functionality
       document.getElementById('logout-button').addEventListener('click', function() {
