@@ -111,27 +111,38 @@
       });
 
       // Countdown timer functionality
-      const deadlineDate = new Date('2025-03-15T00:00:00'); // Example deadline date
-      const countdownTimer = document.getElementById('countdown-timer');
+const deadlineDate = new Date('2025-01-15T00:00:00'); // Example deadline date
+const countdownTimer = document.getElementById('countdown-timer');
 
-      function updateCountdown() {
-        const now = new Date();
-        const timeLeft = deadlineDate - now;
+function updateCountdown() {
+  const now = new Date();
+  const timeLeft = deadlineDate - now;
 
-        if (timeLeft <= 0) {
-          countdownTimer.textContent = "Deadline has passed!";
-        } else {
-          const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-          countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        }
-      }
+  if (timeLeft <= 0) {
+    countdownTimer.textContent = "Deadline has passed!";
+  } else {
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
 
-      // Update countdown every second
-      setInterval(updateCountdown, 1000);
-      updateCountdown(); // Initial call to set the countdown immediately
+  // Disable submit buttons if the deadline has passed
+  if (timeLeft <= 0) {
+    document.querySelectorAll("#events-container button").forEach(button => {
+      button.disabled = true;
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+      button.classList.remove("bg-blue-500", "hover:bg-blue-600");
+      button.textContent = "Submission Closed";
+    });
+  }
+}
+
+// Update countdown every second
+setInterval(updateCountdown, 1000);
+updateCountdown(); // Initial call to set the countdown immediately
+
 
       // Logout functionality
       document.getElementById('logout-button').addEventListener('click', function() {
