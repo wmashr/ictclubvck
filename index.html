@@ -477,8 +477,29 @@
         </div>
         <button type="submit" class="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send Message</button>
         <p id="successMessage" class="text-green-500 mt-2 hidden">Your message has been sent successfully!</p>
-      </form>         
-            </div>
+      </form>   
+      <script>
+        function submitForm(event) {
+          event.preventDefault(); // Prevent default form submission
+
+          // Get form data
+          const formData = new FormData(document.getElementById("emailForm"));
+
+          // Send form data to Google Forms
+          fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLSdXQAjBnJKvTyE6PbicV9cnBGlCeNukUI0gjS9oQjP9U4C5gw/formResponse", {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          }).then(() => {
+            // Show success message
+            document.getElementById("successMessage").classList.remove("hidden");
+            document.getElementById("emailForm").reset();
+          }).catch((error) => {
+            console.error("Error!", error);
+          });
+        }
+      </script>
+     </div>
 
             <!-- Team Members -->
             <div class="bg-gray-900 p-8 rounded-lg shadow-md">
