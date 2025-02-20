@@ -110,16 +110,29 @@
         }
       });
 
-      // Countdown timer functionality
-const deadlineDate = new Date('2025-03-15T00:00:00'); // Example deadline date
+    // The CLOCK UPDATE
+      // Submission period configuration
+const submissionStartDate = new Date('2025-01-10T00:00:00'); // Submission opens on March 10, 2025
+const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
 const countdownTimer = document.getElementById('countdown-timer');
 
 function updateCountdown() {
   const now = new Date();
-  const timeLeft = deadlineDate - now;
+  let timeLeft, message;
+
+  if (now < submissionStartDate) {
+    timeLeft = submissionStartDate - now;
+    message = "Submission not opened yet";
+  } else if (now >= submissionStartDate && now < submissionEndDate) {
+    timeLeft = submissionEndDate - now;
+    message = "Submission Open";
+  } else {
+    timeLeft = 0;
+    message = "Deadline has passed!";
+  }
 
   if (timeLeft <= 0) {
-    countdownTimer.textContent = "Deadline has passed!";
+    countdownTimer.textContent = message;
   } else {
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -128,24 +141,33 @@ function updateCountdown() {
     countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
   }
 
-  // Disable submit buttons if the deadline has passed
-  if (timeLeft <= 0) {
-    document.querySelectorAll("#events-container a").forEach(link => {
-      const button = link.querySelector("button");
-      if (button) {
-        button.disabled = true;
-        button.classList.add("bg-gray-500", "cursor-not-allowed");
-        button.classList.remove("bg-blue-500", "hover:bg-blue-600");
-        button.textContent = "Submission Closed";
-        link.removeAttribute("href"); // Remove the link
-      }
-    });
-  }
+  // Handle button states
+  document.querySelectorAll("#events-container button").forEach(button => {
+    if (now < submissionStartDate) {
+      button.disabled = true;
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+      button.classList.remove("bg-blue-500", "hover:bg-blue-600");
+      button.textContent = "Submission not opened yet";
+      button.parentElement.removeAttribute("href");
+    } else if (now >= submissionStartDate && now < submissionEndDate) {
+      button.disabled = false;
+      button.classList.add("bg-blue-500", "hover:bg-blue-600");
+      button.classList.remove("bg-gray-500", "cursor-not-allowed");
+      button.textContent = "Submit";
+    } else {
+      button.disabled = true;
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+      button.classList.remove("bg-blue-500", "hover:bg-blue-600");
+      button.textContent = "Submission Closed";
+      button.parentElement.removeAttribute("href");
+    }
+  });
 }
 
 // Update countdown every second
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initial call to set the countdown immediately
+
 
 
 
