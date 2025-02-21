@@ -11,10 +11,11 @@
   <!-- Top Navigation -->
   <header class="w-full p-4 bg-gray-700 dark:bg-gray-800 flex justify-between items-center">
     <span class="text-xl font-semibold" id="welcome-message">Welcome, Student!</span>
-
+    <a href="ictclubvck.lk">
     <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">
       Logout
     </button>
+  </a>
   </header>
 
   <!-- Main Content Wrapper with Grid Layout -->
@@ -109,42 +110,42 @@
       });
 
     // Submission period configuration
-const submissionStartDate = new Date('2025-03-01T00:00:00'); // Submission opens on March 10, 2025
-const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
-const countdownTimer = document.getElementById('countdown-timer');
-const countdownHeading = document.querySelector('#deadline-countdown h3'); // Selecting the heading
+    const submissionStartDate = new Date('2025-03-01T00:00:00'); // Submission opens on March 10, 2025
+    const submissionEndDate = new Date('2025-03-15T00:00:00'); // Submission closes on March 15, 2025
+    const countdownTimer = document.getElementById('countdown-timer');
+    const countdownHeading = document.querySelector('#deadline-countdown h3'); // Selecting the heading
 
-function updateCountdown() {
-  const now = new Date();
-  let timeLeft, message;
+    function updateCountdown() {
+      const now = new Date();
+      let timeLeft, message;
 
-  if (now < submissionStartDate) {
-    timeLeft = submissionStartDate - now;
-    message = "Submission not opened yet";
-    countdownHeading.textContent = "Submission Window Opens In"; // Update heading
-  } else if (now >= submissionStartDate && now < submissionEndDate) {
-    timeLeft = submissionEndDate - now;
-    message = "Submission Open";
-    countdownHeading.textContent = "Deadline Countdown"; // Update heading
-  } else {
-    timeLeft = 0;
-    message = "Deadline has passed!";
-    countdownHeading.textContent = "Submission Closed"; // Update heading
-  }
+      if (now < submissionStartDate) {
+        timeLeft = submissionStartDate - now;
+        message = "Submission not opened yet";
+        countdownHeading.textContent = "Submission Window Opens In"; // Update heading
+      } else if (now >= submissionStartDate && now < submissionEndDate) {
+        timeLeft = submissionEndDate - now;
+        message = "Submission Open";
+        countdownHeading.textContent = "Deadline Countdown"; // Update heading
+      } else {
+        timeLeft = 0;
+        message = "Deadline has passed!";
+        countdownHeading.textContent = "Submission Closed"; // Update heading
+      }
 
-  if (timeLeft <= 0) {
-    countdownTimer.textContent = message;
-  } else {
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  }
+      if (timeLeft <= 0) {
+        countdownTimer.textContent = message;
+      } else {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
 
   // Handle button states
-  document.querySelectorAll("#events-container button").forEach(button => {
-    if (now < submissionStartDate) {
+    document.querySelectorAll("#events-container button").forEach(button => {
+      if (now < submissionStartDate) {
       button.disabled = true;
       button.classList.add("bg-gray-500", "cursor-not-allowed");
       button.classList.remove("bg-blue-500", "hover:bg-blue-600");
