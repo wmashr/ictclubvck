@@ -267,11 +267,6 @@
                           INTER SCHOOL
                       </button>
                     </a>
-                    <a href="" target="_blank" class="w-full md:w-1/2">
-                      <button class="neon-button text-lg font-bold py-2 px-6 rounded transition transform hover:scale-105 mt-4 w-full">
-                          INTRA SCHOOL
-                      </button>
-                    </a>
                   </div>
                     <!-- Popup Modal -->
                     <div id="popup-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden p-4">
@@ -290,42 +285,26 @@
     </div>
 
     <script>
-        // POPUP MODEL SCRIPT
-        document.getElementById("register-button").addEventListener("click", function() {
-            document.getElementById("popup-modal").classList.remove("hidden");
-            document.getElementById("close-popup").style.display = "block";
-            if (window.innerWidth <= 768) {
-                document.getElementById("navbar-sticky").classList.add("hidden-navbar");
-            }
-        });
+       // Set the date when registration closes (e.g., January 14, 2025, 11:59 PM)
+       const registrationEnd = new Date("March 14, 2025 23:59:00").getTime();
 
-        document.getElementById("close-popup").addEventListener("click", function() {
-           document.getElementById("popup-modal").classList.add("hidden");
-           document.getElementById("close-popup").style.display = "none";
-           if (window.innerWidth <= 768) {
-               document.getElementById("navbar-sticky").classList.remove("hidden-navbar");
-           }
-        });
-        // Set the date when registration closes (e.g., January 14, 2025, 11:59 PM)
-        const registrationEnd = new Date("March 14, 2025 23:59:00").getTime();
+// Function to update the countdown timer
+function updateTimer() {
+    const now = new Date().getTime();
+    const distance = registrationEnd - now;
 
-        // Function to update the countdown timer
-        function updateTimer() {
-            const now = new Date().getTime();
-            const distance = registrationEnd - now;
-
-            if (distance <= 0) {
-                document.getElementById("countdown").innerHTML = "Registration Closed";
-                document.getElementById("register-button").disabled = true;  // Disable the button
-                document.getElementById("register-button").innerHTML = "Closed";
-            } else {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                document.getElementById("countdown").innerHTML = `Registration ends in:<br> ${days}d ${hours}h ${minutes}m ${seconds}s`;
-            }
-        }
+    if (distance <= 0) {
+        document.getElementById("countdown").innerHTML = "Registration Closed";
+        document.getElementById("register-button").disabled = true;  // Disable the button
+        document.getElementById("register-button").innerHTML = "Closed";
+    } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        document.getElementById("countdown").innerHTML = `Registration ends in:<br> ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+}
 
         // Update the countdown every second
         setInterval(updateTimer, 1000);
