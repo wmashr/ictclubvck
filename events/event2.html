@@ -290,7 +290,7 @@ function updateTimer() {
 
     if (distance <= 0) {
         document.getElementById("countdown").innerHTML = "Registration Closed";
-        document.getElementById("register-button").disabled = true;  // Disable the button
+        document.querySelector(".neon-button").disabled = true;  // Disable the button
         document.getElementById("register-button").innerHTML = "Closed";
     } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
